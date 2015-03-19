@@ -1,0 +1,18 @@
+<xml>
+
+    <a test="ok">
+        <aa></aa>
+        <bb></bb>
+    </a>
+    <b ddd="ok">
+        <bb>
+        </bb>
+        <cc>
+
+        </cc>
+    </b>
+
+
+
+
+</xml>
