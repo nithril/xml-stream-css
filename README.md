@@ -80,10 +80,11 @@ XmlMatcherConsumer.newConsumeAndClose(new FileInputStream('foo.xml'))
 ```
 
 
-Supported selectors (from Jodd documentation)
+Supported selectors 
 =========================
 
-Only forward selectors are supported. For obvious reason backward selectors cannot be supported.
+CSS implementation comes from the [Jodd CSSelly project](http://jodd.org/doc/csselly/). 
+Only forward selectors are supported, for obvious reason backward selectors cannot be supported.
 
 
 * `*` any element
