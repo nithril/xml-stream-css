@@ -3,10 +3,7 @@ package org.nlab.xml.matcher;
 import jodd.csselly.CSSelly;
 import org.apache.commons.lang3.Validate;
 import org.nlab.xml.context.StaxContext;
-import org.nlab.xml.predicate.AttributePredicate;
-import org.nlab.xml.predicate.AttributeValuesPredicate;
-import org.nlab.xml.predicate.CssPredicate;
-import org.nlab.xml.predicate.ElementPredicate;
+import org.nlab.xml.predicate.*;
 
 import java.util.function.Function;
 
@@ -18,28 +15,28 @@ public final class EventMatchers {
 
     public static EventMatcher css(String query, Function<StaxContext,Boolean> consumer){
         Validate.notBlank(query);
-        return new EventMatcher(new CssPredicate(CSSelly.parse(query), true, false) , consumer);
+        return new EventMatcher(Predicates.css(query), consumer);
     }
 
 
     public static EventMatcher elements(String[] elements, Function<StaxContext,Boolean> consumer){
         Validate.notEmpty(elements);
-        return new EventMatcher(new ElementPredicate(true, false, elements), consumer);
+        return new EventMatcher(Predicates.elements(elements), consumer);
     }
 
     public static EventMatcher element(String element, Function<StaxContext,Boolean> consumer){
         Validate.notBlank(element);
-        return new EventMatcher(new ElementPredicate(true, false, element), consumer);
+        return new EventMatcher(Predicates.elements(element), consumer);
     }
 
     public static EventMatcher attribute(String[] attributes, Function<StaxContext,Boolean> consumer){
         Validate.notEmpty(attributes);
-        return new EventMatcher(new AttributePredicate(true, false, attributes), consumer);
+        return new EventMatcher(Predicates.attributes(attributes), consumer);
     }
 
     public static EventMatcher attribute(String attribute, Function<StaxContext,Boolean> consumer){
         Validate.notBlank(attribute);
-        return new EventMatcher(new AttributePredicate(true, false, attribute), consumer);
+        return new EventMatcher(Predicates.attributes(attribute), consumer);
     }
 
 

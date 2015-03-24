@@ -5,6 +5,10 @@ The Streaming API for XML (StAX) is fast but at the cost of lake of context (pre
 Matching an xml path barely more complex than `parent/child` is cumbersome and imply to implement context saving and matching. 
 
 
+
+Element matcher
+------------------
+
 The following code:
 
 ```java
@@ -30,6 +34,8 @@ XmlMatcherConsumer.newConsumeAndClose(new FileInputStream('foo.xml'))
 ```
 
 
+CSS matcher
+------------------
 
 Thinks get tough when the path is not limited to one element and include attributes `/foo/bar[attr='value']`
 
@@ -60,9 +66,22 @@ XmlMatcherConsumer.newConsumeAndClose(new FileInputStream('foo.xml'))
 ```
 
 
+Predicates
+------------------
+
+
+But in fact all matchers are Java 8 [Predicate](https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html) that can be combined.
+ 
+ 
+```java
+XmlMatcherConsumer.newConsumeAndClose(new FileInputStream('foo.xml'))
+        .match(css("foo > bar[attr='value']").or(css("foo > bar2[attr='value']")), c -> {})
+        .consume();
+```
+
 
 Supported selectors (from Jodd documentation)
--------------
+=========================
 
 Only forward selectors are supported. For obvious reason backward selectors cannot be supported.
 

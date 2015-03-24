@@ -2,11 +2,13 @@ package org.nlab.xml;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.nlab.xml.predicate.Predicates;
 
 import java.io.FileInputStream;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.nlab.xml.XmlMatcherConsumer.newConsumeAndClose;
+import static org.nlab.xml.predicate.Predicates.css;
 
 /**
  * Created by nlabrot on 12/03/15.
@@ -168,6 +170,10 @@ public class StaxMatcherTest {
                 .matchCss("ancestor1 > child4", c -> {
                     throw new IllegalStateException();
                 })
+                .match(css("foo > bar[attr='value']").or(css("foo > bar2[attr='value']")), c -> {
+
+                })
+
                 .consume();
 
 
