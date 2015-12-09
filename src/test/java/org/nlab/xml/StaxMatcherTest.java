@@ -2,13 +2,12 @@ package org.nlab.xml;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.nlab.xml.predicate.Predicates;
 
 import java.io.FileInputStream;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.nlab.xml.XmlMatcherConsumer.newConsumeAndClose;
-import static org.nlab.xml.predicate.Predicates.css;
+import static org.nlab.xml.stream.XmlStreams.newConsumerAndClose;
+import static org.nlab.xml.stream.predicate.Predicates.css;
 
 /**
  * Created by nlabrot on 12/03/15.
@@ -21,7 +20,7 @@ public class StaxMatcherTest {
 
         AtomicInteger integer = new AtomicInteger();
 
-        newConsumeAndClose(new FileInputStream("src/test/resources/root/root.xml"))
+        newConsumerAndClose(new FileInputStream("src/test/resources/root/root.xml"))
                 .matchCss(":root", c -> {
                     integer.incrementAndGet();
                 })
@@ -43,7 +42,7 @@ public class StaxMatcherTest {
     public void testCss_Attributes() throws Exception {
         AtomicInteger integer = new AtomicInteger();
 
-        newConsumeAndClose(new FileInputStream("src/test/resources/attribute/attribute.xml"))
+        newConsumerAndClose(new FileInputStream("src/test/resources/attribute/attribute.xml"))
                 .matchCss("a[testExist]", c -> {
                     integer.incrementAndGet();
                 })
@@ -72,7 +71,7 @@ public class StaxMatcherTest {
     public void testCss_Ancestor() throws Exception {
         AtomicInteger integer = new AtomicInteger();
 
-        newConsumeAndClose(new FileInputStream("src/test/resources/children/children.xml"))
+        newConsumerAndClose(new FileInputStream("src/test/resources/children/children.xml"))
                 .matchCss("child4", c -> {
                     integer.incrementAndGet();
                 })
@@ -120,7 +119,7 @@ public class StaxMatcherTest {
     public void testCss_UserContext() throws Exception {
         AtomicInteger integer = new AtomicInteger();
 
-        newConsumeAndClose(new FileInputStream("src/test/resources/usercontext/usercontext.xml"))
+        newConsumerAndClose(new FileInputStream("src/test/resources/usercontext/usercontext.xml"))
                 .matchCss("ancestor1", c -> {
                     c.getUserContext().setProperty("foo", "bar");
                     integer.incrementAndGet();
@@ -143,7 +142,7 @@ public class StaxMatcherTest {
     public void testCss_PseudoClass() throws Exception {
         AtomicInteger integer = new AtomicInteger();
 
-        newConsumeAndClose(new FileInputStream("src/test/resources/pseudoclass/pseudoclass.xml"))
+        newConsumerAndClose(new FileInputStream("src/test/resources/pseudoclass/pseudoclass.xml"))
                 .matchCss("child3:nth-child(3)", c -> {
                     integer.incrementAndGet();
                 })

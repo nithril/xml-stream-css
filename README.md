@@ -1,4 +1,4 @@
-StAX CSS Matcher
+XML Streaming CSS Matcher
 ==================
 
 The Streaming API for XML (StAX) is fast but at the cost of lake of context (previous node / attribute...) and matcher. 
@@ -28,7 +28,7 @@ try(InputStream is = new FileInputStream('foo.xml')){
 Can be replaced with a more friendly lambda based push approach:
 
 ```java
-XmlMatcherConsumer.newConsumeAndClose(new FileInputStream('foo.xml'))
+XmlStreams.newConsumer("foo.xml")
         .matchElement("foo" , c -> {})
         .consume();
 ```
@@ -37,8 +37,9 @@ XmlMatcherConsumer.newConsumeAndClose(new FileInputStream('foo.xml'))
 CSS matcher
 ------------------
 
-Thinks get tough when the path is not limited to one element and include attributes `/foo/bar[attr='value']`
+Things can get tough when the path is not limited to one element and include attributes `/foo/bar[attr='value']`
 
+Pseudo java code:
 
 ```java
 try(InputStream is = new FileInputStream('foo.xml')){
@@ -49,7 +50,7 @@ try(InputStream is = new FileInputStream('foo.xml')){
         if (START_ELEMENT == reader.getEventType()){
             xmlPath.push(reader.getLocalName());
             if ("/foo/bar".equals(xmlPath.toString()) && "value".equals(reader.getAttributeValue(null, "attr"))) {
-
+                //Do something
             }
         }
         reader.next();
@@ -57,28 +58,44 @@ try(InputStream is = new FileInputStream('foo.xml')){
 }
 ```
 
-The CSS matcher allows to keep the code focused 
+The CSS matcher allows to keep the code clean and focused:
 
 ```java
-XmlMatcherConsumer.newConsumeAndClose(new FileInputStream('foo.xml'))
+XmlMatcherConsumer.newConsumer("foo.xml")
         .matchCss("foo > bar[attr='value']" , c -> {})
         .consume();
+```
+
+
+
+Java 8 Stream
+----------------------------------------
+
+XML can be streamed using the Java 8 stream:
+
+```java
+try (Stream<StaxContext> stream = XmlStreams.stream("foo.xml")) {
+    String value = stream
+            .filter(css("foo"))
+            .map(c -> c.getText())
+            .findFirst().get();
+}
 ```
 
 
 Predicates
 ------------------
 
+All matchers are Java 8 [Predicate](https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html) that can be combined.
 
-But in fact all matchers are Java 8 [Predicate](https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html) that can be combined.
- 
- 
+
 ```java
 XmlMatcherConsumer.newConsumeAndClose(new FileInputStream('foo.xml'))
         .match(css("foo > bar[attr='value']").or(css("foo > bar2[attr='value']")), c -> {})
         .consume();
 ```
 
+See the [Predicates helper](org/nlab/xml/stream/predicate/Predicates.java) for the list of supported predicates.
 
 Supported selectors 
 =========================

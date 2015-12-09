@@ -10,7 +10,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class IoCloser {
 
-    List<CompletableFuture> completableFutures = new ArrayList<>();
+    private final List<CompletableFuture> completableFutures = new ArrayList<>();
 
     public IoCloser close(Closeable... streams) {
         for (Closeable stream : streams) {
