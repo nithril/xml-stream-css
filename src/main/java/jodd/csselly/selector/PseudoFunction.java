@@ -2,10 +2,10 @@
 
 package jodd.csselly.selector;
 
+import java.util.Collection;
+
 import jodd.lagarto.dom.Node;
 import jodd.util.StringUtil;
-
-import java.util.List;
 
 /**
  * Pseudo functions.
@@ -117,7 +117,7 @@ public abstract class PseudoFunction<E> {
 		}
 
 		@Override
-		public boolean match(List<Node> currentResults, Node node, int index, Integer expression) {
+		public boolean match(Collection<Node> currentResults, Node node, int index, Integer expression) {
 			int value = expression.intValue();
 			if (value >= 0) {
 				return index == value;
@@ -143,7 +143,7 @@ public abstract class PseudoFunction<E> {
 		}
 
 		@Override
-		public boolean match(List<Node> currentResults, Node node, int index, Integer expression) {
+		public boolean match(Collection<Node> currentResults, Node node, int index, Integer expression) {
 			int value = expression.intValue();
 			return index > value;
 		}
@@ -165,7 +165,7 @@ public abstract class PseudoFunction<E> {
 		}
 
 		@Override
-		public boolean match(List<Node> currentResults, Node node, int index, Integer expression) {
+		public boolean match(Collection<Node> currentResults, Node node, int index, Integer expression) {
 			int value = expression.intValue();
 			return index < value;
 		}
@@ -206,7 +206,7 @@ public abstract class PseudoFunction<E> {
 	/**
 	 * Returns <code>true</code> if node matches the pseudoclass within current results.
 	 */
-	public boolean match(List<Node> currentResults, Node node, int index, E expression) {
+	public boolean match(Collection<Node> currentResults, Node node, int index, E expression) {
 		return true;
 	}
 

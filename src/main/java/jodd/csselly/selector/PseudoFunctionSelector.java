@@ -2,15 +2,15 @@
 
 package jodd.csselly.selector;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import jodd.csselly.CSSellyException;
 import jodd.csselly.Selector;
 import jodd.lagarto.dom.Node;
 import jodd.lagarto.dom.NodeFilter;
 import jodd.lagarto.dom.NodeListFilter;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Pseudo function selector.
@@ -23,8 +23,8 @@ public class PseudoFunctionSelector<E> extends Selector implements NodeFilter, N
 		PSEUDO_FUNCTION_MAP = new HashMap<String, PseudoFunction>(8);
 
 		registerPseudoFunction(PseudoFunction.NTH_CHILD.class);
-		registerPseudoFunction(PseudoFunction.NTH_LAST_CHILD.class);
-		registerPseudoFunction(PseudoFunction.NTH_LAST_OF_TYPE.class);
+		//registerPseudoFunction(PseudoFunction.NTH_LAST_CHILD.class);
+		//registerPseudoFunction(PseudoFunction.NTH_LAST_OF_TYPE.class);
 		registerPseudoFunction(PseudoFunction.NTH_OF_TYPE.class);
 
 		registerPseudoFunction(PseudoFunction.EQ.class);

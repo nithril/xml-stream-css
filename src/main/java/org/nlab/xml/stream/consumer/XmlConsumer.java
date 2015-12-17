@@ -8,88 +8,90 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import org.nlab.xml.stream.context.StaxContext;
+import org.nlab.xml.stream.XmlStream;
+import org.nlab.xml.stream.context.StreamContext;
 import org.nlab.xml.stream.matcher.EventMatcher;
 import org.nlab.xml.stream.matcher.EventMatchers;
+import org.nlab.xml.stream.predicate.XmlPredicate;
 
 
 public class XmlConsumer {
 
-	private final Stream<StaxContext> stream;
+	private final XmlStream stream;
 
-	private final List<Function<StaxContext, Boolean>> consumers = new ArrayList<>();
+	private final List<Function<StreamContext, Boolean>> consumers = new ArrayList<>();
 
-	public XmlConsumer(Stream<StaxContext> stream) {
+	public XmlConsumer(XmlStream stream) {
 		this.stream = Objects.requireNonNull(stream);
 	}
 
 
-	public XmlConsumer matchCss(String query, ConsumeAndContinueConsumer<StaxContext> consumer) {
+	public XmlConsumer matchCss(String query, ConsumeAndContinueConsumer<StreamContext> consumer) {
 		addConsumer(EventMatchers.css(query, consumer));
 		return this;
 	}
 
-	public XmlConsumer matchCss(String query, Function<StaxContext, Boolean> consumer) {
+	public XmlConsumer matchCss(String query, Function<StreamContext, Boolean> consumer) {
 		addConsumer(EventMatchers.css(query, consumer));
 		return this;
 	}
 
 
-	public XmlConsumer matchElements(String[] elements, Function<StaxContext, Boolean> consumer) {
+	public XmlConsumer matchElements(String[] elements, Function<StreamContext, Boolean> consumer) {
 		addConsumer(EventMatchers.elements(elements, consumer));
 		return this;
 	}
 
-	public XmlConsumer matchElements(String[] elements, ConsumeAndContinueConsumer<StaxContext> consumer) {
+	public XmlConsumer matchElements(String[] elements, ConsumeAndContinueConsumer<StreamContext> consumer) {
 		addConsumer(EventMatchers.elements(elements, consumer));
 		return this;
 	}
 
 
-	public XmlConsumer matchElement(String element, Function<StaxContext, Boolean> consumer) {
+	public XmlConsumer matchElement(String element, Function<StreamContext, Boolean> consumer) {
 		addConsumer(EventMatchers.element(element, consumer));
 		return this;
 	}
 
-	public XmlConsumer matchElement(String element, ConsumeAndContinueConsumer<StaxContext> consumer) {
+	public XmlConsumer matchElement(String element, ConsumeAndContinueConsumer<StreamContext> consumer) {
 		addConsumer(EventMatchers.element(element, consumer));
 		return this;
 	}
 
 
-	public XmlConsumer matchAttribute(String attribute, Function<StaxContext, Boolean> consumer) {
+	public XmlConsumer matchAttribute(String attribute, Function<StreamContext, Boolean> consumer) {
 		addConsumer(EventMatchers.attribute(attribute, consumer));
 		return this;
 	}
 
-	public XmlConsumer matchAttribute(String attribute, ConsumeAndContinueConsumer<StaxContext> consumer) {
+	public XmlConsumer matchAttribute(String attribute, ConsumeAndContinueConsumer<StreamContext> consumer) {
 		addConsumer(EventMatchers.attribute(attribute, consumer));
 		return this;
 	}
 
-	public XmlConsumer matchAttributeValue(String attribute, String value, Function<StaxContext, Boolean> consumer) {
+	public XmlConsumer matchAttributeValue(String attribute, String value, Function<StreamContext, Boolean> consumer) {
 		addConsumer(EventMatchers.attributeValue(attribute, value, consumer));
 		return this;
 	}
 
-	public XmlConsumer matchAttributeValue(String attribute, String value, ConsumeAndContinueConsumer<StaxContext> consumer) {
+	public XmlConsumer matchAttributeValue(String attribute, String value, ConsumeAndContinueConsumer<StreamContext> consumer) {
 		addConsumer(EventMatchers.attributeValue(attribute, value, consumer));
 		return this;
 	}
 
 
-	public XmlConsumer match(Predicate<StaxContext> predicate, Function<StaxContext, Boolean> consumer) {
+	public XmlConsumer match(Predicate<StreamContext> predicate, Function<StreamContext, Boolean> consumer) {
 		addConsumer(new EventMatcher(predicate, consumer));
 		return this;
 	}
 
-	public XmlConsumer match(Predicate<StaxContext> predicate, ConsumeAndContinueConsumer<StaxContext> consumer) {
+	public XmlConsumer match(Predicate<StreamContext> predicate, ConsumeAndContinueConsumer<StreamContext> consumer) {
 		addConsumer(new EventMatcher(predicate, consumer));
 		return this;
 	}
 
 
-	public XmlConsumer addConsumer(Function<StaxContext, Boolean> consumer) {
+	public XmlConsumer addConsumer(Function<StreamContext, Boolean> consumer) {
 		consumers.add(consumer);
 		return this;
 	}
@@ -97,12 +99,22 @@ public class XmlConsumer {
 
 	/**
 	 * Consume the Stream
+	 *
 	 * @throws XMLStreamException
 	 */
 	public void consume() throws XMLStreamException {
-		try (Stream<StaxContext> stream = this.stream){
+		for (Function<StreamContext, Boolean> consumer : consumers) {
+			if (consumer instanceof EventMatcher
+					&& ((EventMatcher) consumer).getPredicate() instanceof XmlPredicate
+					&& ((XmlPredicate) ((EventMatcher) consumer).getPredicate()).requireSibbling()) {
+				stream.getXmlMatcherStreamReader().requireSibbling();
+				break;
+			}
+		}
+
+		try (Stream<StreamContext> stream = this.stream) {
 			stream.forEach(c -> {
-				for (Function<StaxContext, Boolean> consumer : consumers) {
+				for (Function<StreamContext, Boolean> consumer : consumers) {
 					if (!consumer.apply(c)) {
 						break;
 					}

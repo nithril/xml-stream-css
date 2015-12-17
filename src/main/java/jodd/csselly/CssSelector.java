@@ -2,6 +2,9 @@
 
 package jodd.csselly;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jodd.csselly.selector.AttributeSelector;
 import jodd.csselly.selector.PseudoClassSelector;
 import jodd.csselly.selector.PseudoFunctionSelector;
@@ -9,9 +12,6 @@ import jodd.lagarto.dom.Node;
 import jodd.lagarto.dom.NodeFilter;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static jodd.csselly.selector.Match.EQUALS;
 import static jodd.csselly.selector.Match.INCLUDES;
@@ -80,6 +80,10 @@ public class CssSelector implements NodeFilter {
 	 */
 	public Selector getSelector(int index) {
 		return selectors.get(index);
+	}
+
+	public List<Selector> getSelectors() {
+		return selectors;
 	}
 
 	/**

@@ -14,7 +14,16 @@
     </ancestor1>
 
     <ancestor2>
-
+        <parent2>
+            <child1></child1>
+            <child2></child2>
+            <child3></child3>
+            <child4></child4>
+            <child5></child5>
+            <child6>
+                <grandchild1></grandchild1>
+            </child6>
+        </parent2>
     </ancestor2>
 
 

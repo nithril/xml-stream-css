@@ -1,8 +1,8 @@
 package org.nlab.xml.stream.predicate;
 
-import org.nlab.xml.stream.context.StaxContext;
+import java.util.Arrays;
 
-import java.util.function.Predicate;
+import org.nlab.xml.stream.context.StreamContext;
 
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
@@ -10,7 +10,7 @@ import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 /**
  * Created by nlabrot on 15/03/15.
  */
-public class ElementPredicate implements Predicate<StaxContext> {
+public class ElementPredicate implements XmlPredicate {
 
     private final String[] elements;
     private final boolean matchStart;
@@ -23,7 +23,7 @@ public class ElementPredicate implements Predicate<StaxContext> {
     }
 
     @Override
-    public boolean test(StaxContext staxContext) {
+    public boolean test(StreamContext staxContext) {
         if ((!matchStart || START_ELEMENT != staxContext.getEvent()) && (!matchEnd || END_ELEMENT != staxContext.getEvent())) {
             return false;
         }
@@ -36,4 +36,12 @@ public class ElementPredicate implements Predicate<StaxContext> {
         return false;
     }
 
+    @Override
+    public String toString() {
+        return "ElementPredicate{" +
+                "elements=" + Arrays.toString(elements) +
+                ", matchStart=" + matchStart +
+                ", matchEnd=" + matchEnd +
+                '}';
+    }
 }

@@ -2,12 +2,12 @@
 
 package jodd.csselly;
 
-import jodd.util.StringUtil;
-import jodd.util.UnsafeUtil;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import jodd.util.StringUtil;
+import jodd.util.UnsafeUtil;
 
 /**
  * CSS selector parser. Works with one query, i.e. does not support groups

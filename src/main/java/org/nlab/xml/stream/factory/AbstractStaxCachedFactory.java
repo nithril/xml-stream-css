@@ -1,10 +1,10 @@
 package org.nlab.xml.stream.factory;
 
 
-import org.apache.commons.lang3.Validate;
-
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.apache.commons.lang3.Validate;
 
 
 /**

@@ -1,19 +1,15 @@
 package org.nlab.xml.stream.util;
 
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stax.StAXSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.StringWriter;
-import java.io.UncheckedIOException;
 import java.io.Writer;
 
 import org.codehaus.staxmate.dom.DOMConverter;
@@ -55,7 +51,7 @@ public final class Transformers {
 		}
 	}
 
-	public static String toString(Node node) throws UncheckedExecutionException {
+	public static String toText(Node node) throws UncheckedExecutionException {
 		try {
 			StringWriter writer = new StringWriter();
 			transform(new DOMSource(node), new StreamResult(writer));

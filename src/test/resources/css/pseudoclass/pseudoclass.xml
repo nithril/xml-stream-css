@@ -12,6 +12,9 @@
             <child5></child5>
             <child6>
                 <grandchild1></grandchild1>
+                <grandchild2>
+                    <foo/>
+                </grandchild2>
             </child6>
         </parent1>
     </ancestor1>

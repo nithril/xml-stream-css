@@ -4,7 +4,10 @@ package jodd.lagarto.dom;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * DOM node.
@@ -37,7 +40,10 @@ public abstract class Node implements Cloneable {
 
     // children
 
-    protected List<Node> childNodes;
+    protected List<Node> childNodes = Collections.emptyList();
+
+    //protected Set<Node> descendants = new HashSet<>();
+
     protected int childElementNodesCount;
     protected Element[] childElementNodes;
 
@@ -166,7 +172,31 @@ public abstract class Node implements Cloneable {
         initChildNodes(node);
         childNodes.add(node);
         reindexChildrenOnAdd(1);
+
+        //addDescendant(this, node);
     }
+
+   /* private void addDescendant(Node curNode , Node node){
+        while (curNode != null){
+            curNode.descendants.add(node);
+            curNode = curNode.getParentNode();
+        }
+    }
+
+    private void removeDescendant(Node curNode , Node node){
+        while (curNode != null){
+            curNode.descendants.remove(node);
+            curNode = curNode.getParentNode();
+        }
+    }
+
+    private void removeDescendants(Node curNode , List<Node> nodes){
+        while (curNode != null){
+            curNode.descendants.removeAll(nodes);
+            curNode = curNode.getParentNode();
+        }
+    }
+*/
 
     /**
      * Appends several child nodes at once.
@@ -295,6 +325,9 @@ public abstract class Node implements Cloneable {
         childElementNodesCount = 0;
 
         if (removedNodes != null) {
+
+            //removeDescendants(this, removedNodes);
+
             for (int i = 0, removedNodesSize = removedNodes.size(); i < removedNodesSize; i++) {
                 Node removedNode = removedNodes.get(i);
                 removedNode.detachFromParent();
@@ -497,6 +530,18 @@ public abstract class Node implements Cloneable {
         }
         return childNodes.toArray(new Node[childNodes.size()]);
     }
+
+    /**
+     * Returns an array of all children nodes. Returns an empty array
+     * if there are no children.
+     */
+    public List<Node> getChildNodesAsList() {
+        if (childNodes == null) {
+            return Collections.emptyList();
+        }
+        return childNodes;
+    }
+
 
     /**
      * Returns an array of all children elements.
@@ -809,8 +854,8 @@ public abstract class Node implements Cloneable {
      * Also fix owner document for new node, if needed.
      */
     protected void initChildNodes(Node newNode) {
-        if (childNodes == null) {
-            childNodes = new ArrayList<Node>();
+        if (childNodes.equals(Collections.emptyList())) {
+            childNodes = new ArrayList<>();
         }
         if (ownerDocument != null) {
             if (newNode.ownerDocument != ownerDocument) {
@@ -1063,5 +1108,7 @@ public abstract class Node implements Cloneable {
         }
         return path.toString();
     }
+
+
 
 }

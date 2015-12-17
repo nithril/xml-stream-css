@@ -1,10 +1,10 @@
 package jodd.util;
 
 
-import static jodd.util.StringPool.EMPTY;
-
 import java.io.UnsupportedEncodingException;
 import java.util.Locale;
+
+import static jodd.util.StringPool.EMPTY;
 
 /**
  * Various String utilities.

@@ -1,6 +1,10 @@
 package org.nlab.xml.stream.context;
 
-import java.util.*;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Optional;
 
 
 public class UserContext {

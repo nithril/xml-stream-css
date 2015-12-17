@@ -2,7 +2,6 @@
 
 package jodd.lagarto.dom;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

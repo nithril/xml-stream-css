@@ -122,8 +122,8 @@ Only forward selectors are supported, for obvious reason backward selectors cann
 * NOT SUPPORTED `E:last-child` an E element, last child of its parent
 * `E:first-of-type` an E element, first sibling of its type
 * NOT SUPPORTED `E:last-of-type` an E element, last sibling of its type
-* `E:only-child` an E element, only child of its parent
-* `E:only-of-type` an E element, only sibling of its type
+* NOT SUPPORTED `E:only-child` an E element, only child of its parent
+* NOT SUPPORTED `E:only-of-type` an E element, only sibling of its type
 * `E:empty` an E element that has no children (including text nodes)
 * `E#myid` an E element with ID equal to “myid”.
 * `E F` an F element descendant of an E element

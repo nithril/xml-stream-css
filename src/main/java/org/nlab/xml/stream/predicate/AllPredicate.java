@@ -1,13 +1,11 @@
 package org.nlab.xml.stream.predicate;
 
-import org.nlab.xml.stream.context.StaxContext;
-
-import java.util.function.Predicate;
+import org.nlab.xml.stream.context.StreamContext;
 
 /**
  * Created by nlabrot on 15/03/15.
  */
-public class AllPredicate implements Predicate<StaxContext> {
+public class AllPredicate implements XmlPredicate {
 
     public static final AllPredicate INSTANCE = new AllPredicate();
 
@@ -15,8 +13,12 @@ public class AllPredicate implements Predicate<StaxContext> {
     }
 
     @Override
-    public boolean test(StaxContext staxContext) {
+    public boolean test(StreamContext staxContext) {
         return true;
     }
 
+    @Override
+    public String toString() {
+        return "AllPredicate{}";
+    }
 }

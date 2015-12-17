@@ -1,34 +1,34 @@
 package org.nlab.xml.stream.matcher;
 
-import org.nlab.xml.stream.context.StaxContext;
-
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import org.nlab.xml.stream.context.StreamContext;
 
-public class EventMatcher implements Function<StaxContext, Boolean> {
 
-    private final Predicate<StaxContext> predicate;
-    private final Function<StaxContext,Boolean> consumer;
+public class EventMatcher implements Function<StreamContext, Boolean> {
 
-    public EventMatcher(Predicate<StaxContext> predicate, Function<StaxContext,Boolean> consumer) {
-        this.predicate = predicate;
-        this.consumer = consumer;
-    }
+	private final Predicate<StreamContext> predicate;
+	private final Function<StreamContext, Boolean> consumer;
 
-    @Override
-    public Boolean apply(StaxContext staxContext) {
-        if (predicate.test(staxContext)) {
-            return consumer.apply(staxContext);
-        }
-        return true;
-    }
+	public EventMatcher(Predicate<StreamContext> predicate, Function<StreamContext, Boolean> consumer) {
+		this.predicate = predicate;
+		this.consumer = consumer;
+	}
 
-    public Predicate<StaxContext> getPredicate() {
-        return predicate;
-    }
+	@Override
+	public Boolean apply(StreamContext staxContext) {
+		if (predicate.test(staxContext)) {
+			return consumer.apply(staxContext);
+		}
+		return true;
+	}
 
-    public Function<StaxContext,Boolean> getConsumer() {
-        return consumer;
-    }
+	public Predicate<StreamContext> getPredicate() {
+		return predicate;
+	}
+
+	public Function<StreamContext, Boolean> getConsumer() {
+		return consumer;
+	}
 }

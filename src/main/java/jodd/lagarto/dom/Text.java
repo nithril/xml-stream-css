@@ -3,9 +3,9 @@
 package jodd.lagarto.dom;
 
 
-import jodd.util.StringUtil;
-
 import java.io.IOException;
+
+import jodd.util.StringUtil;
 
 /**
  * Text node. Text value is stored as node value in decoded, readable form.

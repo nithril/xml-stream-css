@@ -1,0 +1,9 @@
+<xml>
+
+    <a testExist="ok"/>
+    <a testEquals="ok"/>
+    <a testContains="lorem ipsum"/>
+
+
+
+</xml>

@@ -12,7 +12,7 @@ import java.util.stream.StreamSupport;
 
 import org.nlab.util.IoCloser;
 import org.nlab.xml.stream.consumer.XmlConsumer;
-import org.nlab.xml.stream.context.StaxContext;
+import org.nlab.xml.stream.context.StreamContext;
 import org.nlab.xml.stream.factory.StaxCachedFactory;
 import org.nlab.xml.stream.reader.XmlMatcherStreamReader;
 import org.nlab.xml.stream.reader.XmlStreamReaderSpliterator;
@@ -30,22 +30,13 @@ public final class XmlStreams {
 	/**
 	 * Create a Stream from a path
 	 * As the stream parses an InputStream, the stream must be embed in a try-with-resource statement
-	 * @param file
+	 * @param path
 	 * @return
 	 * @throws XMLStreamException
 	 * @throws IOException
 	 */
-	public static Stream<StaxContext> stream(Path file) throws XMLStreamException, IOException {
-		InputStream inputStream = null;
-		XMLStreamReader streamReader = null;
-		try {
-			inputStream = Files.newInputStream(file);
-			streamReader = StaxCachedFactory.getInputFactory().createXMLStreamReader(inputStream);
-			return createStreamAndClose(inputStream, streamReader);
-		} catch (Exception e) {
-			IoCloser.ioCloser().close(streamReader).close(inputStream);
-			throw e;
-		}
+	public static XmlStream stream(Path path) throws XMLStreamException, IOException {
+		return XmlStreamSpec.with(path).stream();
 	}
 
 	/**
@@ -56,8 +47,8 @@ public final class XmlStreams {
 	 * @throws XMLStreamException
 	 * @throws IOException
 	 */
-	public static Stream<StaxContext> stream(String path) throws XMLStreamException, IOException {
-		return stream(Paths.get(path));
+	public static XmlStream stream(String path) throws XMLStreamException, IOException {
+		return XmlStreamSpec.with(path).stream();
 	}
 
 
@@ -68,15 +59,8 @@ public final class XmlStreams {
 	 * @return
 	 * @throws XMLStreamException
 	 */
-	public static Stream<StaxContext> streamAndClose(InputStream is) throws XMLStreamException {
-		XMLStreamReader streamReader = null;
-		try {
-			streamReader = StaxCachedFactory.getInputFactory().createXMLStreamReader(requireNonNull(is));
-			return createStreamAndClose(is, streamReader);
-		} catch (Exception e) {
-			IoCloser.ioCloser().close(streamReader).close(is);
-			throw e;
-		}
+	public static XmlStream streamAndClose(InputStream is) throws XMLStreamException, IOException {
+		return XmlStreamSpec.with(is).closeOnFinish().stream();
 	}
 
 	/**
@@ -86,8 +70,8 @@ public final class XmlStreams {
 	 * @return
 	 * @throws XMLStreamException
 	 */
-	public static Stream<StaxContext> streamAndClose(XMLStreamReader reader) throws XMLStreamException {
-		return createStreamAndClose(requireNonNull(reader));
+	public static XmlStream streamAndClose(XMLStreamReader reader) throws XMLStreamException, IOException {
+		return XmlStreamSpec.with(reader).closeOnFinish().stream();
 	}
 
 
@@ -99,7 +83,7 @@ public final class XmlStreams {
 	 * @throws XMLStreamException
 	 */
 	public static XmlConsumer newConsumer(String path) throws IOException, XMLStreamException {
-		return new XmlConsumer(XmlStreams.stream(path));
+		return XmlStreamSpec.with(path).consume();
 	}
 
 	/**
@@ -110,7 +94,7 @@ public final class XmlStreams {
 	 * @throws IOException
 	 */
 	public static XmlConsumer newConsumer(Path path) throws XMLStreamException, IOException {
-		return new XmlConsumer(XmlStreams.stream(path));
+		return XmlStreamSpec.with(path).consume();
 	}
 
 	/**
@@ -120,8 +104,8 @@ public final class XmlStreams {
 	 * @return
 	 * @throws XMLStreamException
 	 */
-	public static XmlConsumer newConsumerAndClose(XMLStreamReader xmlStreamReader) throws XMLStreamException {
-		return new XmlConsumer(XmlStreams.streamAndClose(xmlStreamReader));
+	public static XmlConsumer newConsumerAndClose(XMLStreamReader xmlStreamReader) throws XMLStreamException, IOException {
+		return XmlStreamSpec.with(xmlStreamReader).closeOnFinish().consume();
 	}
 
 	/**
@@ -131,34 +115,9 @@ public final class XmlStreams {
 	 * @return
 	 * @throws XMLStreamException
 	 */
-	public static XmlConsumer newConsumerAndClose(InputStream inputStream) throws XMLStreamException {
-		return new XmlConsumer(XmlStreams.streamAndClose(inputStream));
+	public static XmlConsumer newConsumerAndClose(InputStream inputStream) throws XMLStreamException, IOException {
+		return XmlStreamSpec.with(inputStream).closeOnFinish().consume();
 	}
 
 
-
-	private static Stream<StaxContext> createStreamAndClose(InputStream is, XMLStreamReader reader) {
-		try {
-			XmlMatcherStreamReader xmlMatcherStreamReader = new XmlMatcherStreamReader(reader);
-			return StreamSupport.stream(new XmlStreamReaderSpliterator(xmlMatcherStreamReader), false)
-					.onClose(() -> IoCloser.ioCloser().close(reader).close(is));
-
-		} catch (Exception e) {
-			IoCloser.ioCloser().close(reader).close(is);
-			throw e;
-		}
-	}
-
-
-	private static Stream<StaxContext> createStreamAndClose(XMLStreamReader reader) {
-		try {
-			XmlMatcherStreamReader xmlMatcherStreamReader = new XmlMatcherStreamReader(reader);
-			return StreamSupport.stream(new XmlStreamReaderSpliterator(xmlMatcherStreamReader), false)
-					.onClose(() -> IoCloser.ioCloser().close(reader));
-
-		} catch (Exception e) {
-			IoCloser.ioCloser().close(reader);
-			throw e;
-		}
-	}
 }

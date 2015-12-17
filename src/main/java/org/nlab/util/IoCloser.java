@@ -33,6 +33,21 @@ public class IoCloser {
         return this;
     }
 
+    public IoCloser close(Object... streams) {
+        for (Object object : streams) {
+            if (object instanceof Closeable){
+                this.close((Closeable)object);
+            }
+            else if (object instanceof XMLStreamReader){
+                this.close((XMLStreamReader)object);
+            }
+            else if (object instanceof XMLStreamWriter){
+                this.close((XMLStreamWriter)object);
+            }
+        }
+        return this;
+    }
+
     /**
      * Get the result or throw exception if any occurs
      *
@@ -49,8 +64,12 @@ public class IoCloser {
 
     public static IoCloser ioCloser() {
         return new IoCloser();
-
     }
+
+    public static Runnable promiseIoCloser(Object...objects){
+        return () -> IoCloser.ioCloser().close(objects);
+    }
+
 
 
     private void silentClose(ThrowableRunnable c) {

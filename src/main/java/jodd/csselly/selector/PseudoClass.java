@@ -2,9 +2,9 @@
 
 package jodd.csselly.selector;
 
-import jodd.lagarto.dom.Node;
-
 import java.util.List;
+
+import jodd.lagarto.dom.Node;
 
 /**
  * Pseudo classes.
@@ -39,6 +39,9 @@ public abstract class PseudoClass {
 	 * a lower specificity.
 	 */
 	public static class ONLY_CHILD extends PseudoClass {
+
+
+
 		@Override
 		public boolean match(Node node) {
 			return (node.getSiblingElementIndex() == 0) && (node.getParentNode().getChildElementsCount() == 1);

@@ -1,66 +1,58 @@
 package org.nlab.xml.stream.reader;
 
-import jodd.lagarto.dom.Document;
-import jodd.lagarto.dom.Element;
-import jodd.lagarto.dom.Node;
-import org.nlab.xml.stream.context.StaxContext;
-import org.nlab.xml.stream.context.UserContext;
-
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.util.StreamReaderDelegate;
 
+import org.nlab.xml.stream.context.PathContext;
+import org.nlab.xml.stream.context.StreamContext;
+import org.nlab.xml.stream.context.UserContext;
+
+import jodd.lagarto.dom.Document;
+
 
 public class XmlMatcherStreamReader extends StreamReaderDelegate {
 
-    private final Document document;
-    private final UserContext userContext = new UserContext();
-	private Node currentNode;
-
-    private StaxContext currentStaxContext;
+	private final StreamContext streamContext;
 
 
-    public XmlMatcherStreamReader(XMLStreamReader reader) {
-        super(reader);
-        document = new Document();
-        currentNode = document;
-        currentStaxContext = new StaxContext(document, currentNode, this, getEventType(), userContext);
-    }
+	public XmlMatcherStreamReader(XMLStreamReader reader) {
+		super(reader);
+		Document document = new Document();
 
-    @Override
-    public int next() throws XMLStreamException {
-        if (END_ELEMENT == getEventType()) {
-            userContext.pop();
-            currentNode = currentNode.getParentNode();
-        }
+		streamContext = new StreamContext(this , new UserContext() , new PathContext(document));
+		streamContext.setEvent(getEventType());
+	}
 
-        return processEvent(super.next());
-    }
+	@Override
+	public int next() throws XMLStreamException {
+		if (END_ELEMENT == getEventType()) {
+			streamContext.getPathContext().endElem();
+			streamContext.getUserContext().pop();
+		}
+		return processEvent(super.next());
+	}
 
-    protected int processEvent(int event) {
-        if (START_ELEMENT == event) {
-            userContext.push();
-
-            Element contextNode = new Element(document, this.getLocalName());
-            for (int i = 0; i < this.getAttributeCount(); i++) {
-                contextNode.setAttribute(this.getAttributeLocalName(i), this.getAttributeValue(i));
-            }
-            currentNode.addChild(contextNode);
-            currentNode = contextNode;
-        }
-
-        currentStaxContext = new StaxContext(document, currentNode, this, event, userContext);
-
-        return event;
-    }
-
-    public StaxContext getCurrentContext(){
-        return currentStaxContext;
-    }
+	protected int processEvent(int event) {
+		if (START_ELEMENT == event) {
+			streamContext.getUserContext().push();
+			streamContext.getPathContext().startElem(this);
+		}
+		streamContext.setEvent(event);
+		return event;
+	}
 
 
 	@Override
 	public void setParent(XMLStreamReader reader) {
 		throw new UnsupportedOperationException("set parent is not supported");
+	}
+
+	public void requireSibbling() {
+		streamContext.getPathContext().requireSibbling();
+	}
+
+	public StreamContext getStreamContext() {
+		return streamContext;
 	}
 }
