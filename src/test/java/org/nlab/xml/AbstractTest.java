@@ -8,12 +8,12 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 
+import org.jooq.lambda.tuple.Tuple2;
 import org.junit.Assert;
 import org.nlab.xml.stream.XmlStreams;
 import org.nlab.xml.stream.consumer.XmlConsumer;
 import org.nlab.xml.stream.context.StreamContext;
 
-import javaslang.Tuple2;
 
 import static org.nlab.xml.stream.XmlStreams.newConsumer;
 
@@ -34,14 +34,14 @@ public class AbstractTest {
 		XmlConsumer xmlConsumer = newConsumer(file);
 
 		for (Tuple2<Predicate<StreamContext>, Integer> tuple : list) {
-			counters.put(tuple._1(), new AtomicInteger());
-			xmlConsumer.match(tuple._1(), c -> counters.get(tuple._1()).incrementAndGet());
+			counters.put(tuple.v1(), new AtomicInteger());
+			xmlConsumer.match(tuple.v1(), c -> counters.get(tuple.v1()).incrementAndGet());
 		}
 
 		xmlConsumer.consume();
 
 		for (Tuple2<Predicate<StreamContext>, Integer> tuple : list) {
-			Assert.assertEquals(tuple._1().toString(), tuple._2().intValue(), counters.get(tuple._1()).get());
+			Assert.assertEquals(tuple.v1().toString(), tuple.v2().intValue(), counters.get(tuple.v1()).get());
 		}
 
 	}
@@ -51,10 +51,10 @@ public class AbstractTest {
 		for (Tuple2<Predicate<StreamContext>, Integer> tuple : list) {
 
 			long count = XmlStreams.stream(file)
-					.filter(tuple._1())
+					.filter(tuple.v1())
 					.count();
 
-			Assert.assertEquals(tuple._1().toString(), tuple._2().intValue(), count);
+			Assert.assertEquals(tuple.v1().toString(), tuple.v2().intValue(), count);
 		}
 
 	}

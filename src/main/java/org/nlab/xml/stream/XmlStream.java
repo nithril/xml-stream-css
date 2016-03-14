@@ -23,8 +23,11 @@ import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 import org.nlab.xml.stream.context.StreamContext;
+import org.nlab.xml.stream.predicate.Predicates;
 import org.nlab.xml.stream.predicate.XmlPredicate;
 import org.nlab.xml.stream.reader.XmlMatcherStreamReader;
+
+import static org.nlab.xml.stream.predicate.Predicates.css;
 
 /**
  * Created by nlabrot on 14/12/15.
@@ -37,6 +40,10 @@ public class XmlStream implements Stream<StreamContext> {
 	public XmlStream(Stream<StreamContext> delegate, XmlMatcherStreamReader xmlMatcherStreamReader) {
 		this.delegate = delegate;
 		this.xmlMatcherStreamReader = xmlMatcherStreamReader;
+	}
+
+	public XmlStream css(String css){
+		return filter(Predicates.css("page"));
 	}
 
 	@Override

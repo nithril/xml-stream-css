@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.zip.GZIPInputStream;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -36,7 +37,7 @@ public class StreamStaxMatcherTest {
 			List<String> nodes = stream
 					.filter(css("node"))
 					.map(c -> Transformers.toDom(c.getStreamReader()))
-					.map(d -> Transformers.toText(d))
+					.map(d -> Transformers.toXml(d))
 					.collect(Collectors.toList());
 
 			Assert.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><node><content>1</content></node>", nodes.get(0));
@@ -48,36 +49,30 @@ public class StreamStaxMatcherTest {
 	public void testWikiConsume() throws Exception {
 		AtomicInteger integer = new AtomicInteger();
 
-		newConsumerAndClose(new FileInputStream("src/test/resources/enwiki-latest-pages-articles2.xml"))
+		newConsumerAndClose(new GZIPInputStream(new FileInputStream("src/test/resources/enwiki-latest-pages-articles2.gz")))
 				.matchCss("mediawiki:root > page > title", c -> {
-					//integer.incrementAndGet();
 					Transformers.toWriter(c.getStreamReader(), new StringWriter());
 				})
-
 				.consume();
 
-		//Assert.assertEquals(3, integer.get());
 	}
 
 	@Test
-	public void testWiki() throws Exception {
+	public void testWikiStreamReaderWithCss() throws Exception {
 
-		//XmlStreamSpec.with("").closeOnFinish().consume().;
-
-		try (Stream<StreamContext> stream = XmlStreams.stream("src/test/resources/enwiki-latest-pages-articles2.xml")) {
+		try (Stream<StreamContext> stream = XmlStreams.streamAndClose(new GZIPInputStream(new FileInputStream("src/test/resources/enwiki-latest-pages-articles2.gz")))) {
 			stream
 					.filter(css("mediawiki:root page"))
-					//.map(c -> Transformers.toText(c.getStreamReader()))
 					.forEach(t -> {});
 
 		}
 	}
 	@Test
-	public void testWiki2() throws Exception {
+	public void testWikiPlainStreamReader() throws Exception {
 		InputStream inputStream = null;
 		XMLStreamReader streamReader = null;
 		try {
-			inputStream = Files.newInputStream(Paths.get("src/test/resources/enwiki-latest-pages-articles2.xml"));
+			inputStream = new GZIPInputStream(new FileInputStream("src/test/resources/enwiki-latest-pages-articles2.gz"));
 			streamReader = StaxCachedFactory.getInputFactory().createXMLStreamReader(inputStream);
 
 			while(streamReader.hasNext()){

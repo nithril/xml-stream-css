@@ -1,5 +1,6 @@
 package org.nlab.xml.stream.util;
 
+import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -51,7 +52,7 @@ public final class Transformers {
 		}
 	}
 
-	public static String toText(Node node) throws UncheckedExecutionException {
+	public static String toXml(Node node) throws UncheckedExecutionException {
 		try {
 			StringWriter writer = new StringWriter();
 			transform(new DOMSource(node), new StreamResult(writer));
@@ -61,9 +62,25 @@ public final class Transformers {
 		}
 	}
 
+	public static String toXml(XMLStreamReader reader) {
+		StringWriter writer = new StringWriter();
+		toWriter(reader, writer);
+		return writer.toString();
+	}
+
 	public static void transform(Source source, Result result) throws TransformerException {
 		TransformerFactory tf = TransformerFactory.newInstance();
 		Transformer t = tf.newTransformer();
 		t.transform(source, result);
 	}
+
+
+	public static String getElementText(XMLStreamReader reader) {
+		try {
+			return reader.getElementText();
+		} catch (XMLStreamException e) {
+			throw new UncheckedExecutionException(e);
+		}
+	}
+
 }
