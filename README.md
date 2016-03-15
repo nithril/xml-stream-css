@@ -61,7 +61,7 @@ try(InputStream is = new FileInputStream('foo.xml')){
 The CSS matcher allows to keep the code clean and focused:
 
 ```java
-XmlMatcherConsumer.newConsumer("foo.xml")
+XmlStreams.newConsumer("foo.xml")
         .matchCss("foo > bar[attr='value']" , c -> {})
         .consume();
 ```
@@ -76,7 +76,7 @@ XML can be streamed using the Java 8 stream:
 ```java
 try (Stream<StaxContext> stream = XmlStreams.stream("foo.xml")) {
     String value = stream
-            .filter(css("foo"))
+            .css("foo")
             .map(c -> c.getText())
             .findFirst().get();
 }
@@ -90,12 +90,42 @@ All matchers are Java 8 [Predicate](https://docs.oracle.com/javase/8/docs/api/ja
 
 
 ```java
-XmlMatcherConsumer.newConsumeAndClose(new FileInputStream('foo.xml'))
+XmlStreams.newConsumerAndClose(new FileInputStream('foo.xml'))
         .match(css("foo > bar[attr='value']").or(css("foo > bar2[attr='value']")), c -> {})
         .consume();
 ```
 
 See the [Predicates helper](org/nlab/xml/stream/predicate/Predicates.java) for the list of supported predicates.
+
+
+
+
+Nested Consumer and Streamer
+------------------
+
+Consumer and Streamer can be nested.
+
+In the following example, a first stream match all the wikipedia page tag. Starting from this tag, 
+a nester consumer extract the title, id, timestamp and contributor name:
+
+```java
+    try (InputStream fis = new FileInputStream("src/test/resources/enwiki-latest-pages-articles2.gz");
+         XmlStream stream = XmlStreams.streamAndClose(new GZIPInputStream(fis))) {
+
+        stream.css("page")
+                .map(context -> {
+                    Page page = new Page();
+                    context.partialConsumer()
+                            .matchCss("page > title", c -> page.title = getElementText(c.getStreamReader()))
+                            .matchCss("page > id", c -> page.id = getElementText(c.getStreamReader()))
+                            .matchCss("revision > timestamp", c -> page.lastRevision = getElementText(c.getStreamReader()))
+                            .matchCss("revision > contributor > username", c -> page.lastContributor = getElementText(c.getStreamReader()))
+                            .consume();
+                    return page;
+                })
+                .forEach(p -> p.toString());
+    }
+```
 
 Supported selectors 
 =========================

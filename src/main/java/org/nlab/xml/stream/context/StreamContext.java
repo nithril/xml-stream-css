@@ -1,5 +1,9 @@
 package org.nlab.xml.stream.context;
 
+import java.util.stream.Stream;
+
+import org.nlab.xml.stream.XmlStreamSpec;
+import org.nlab.xml.stream.consumer.XmlConsumer;
 import org.nlab.xml.stream.reader.XmlMatcherStreamReader;
 
 import jodd.lagarto.dom.Document;
@@ -47,5 +51,13 @@ public class StreamContext {
 
 	public Document getDocument() {
 		return pathContext.getDocument();
+	}
+
+	public Stream<StreamContext> partialStream(){
+		return new XmlStreamSpec(streamReader).partial().uncheckedStream();
+	}
+
+	public XmlConsumer partialConsumer(){
+		return new XmlStreamSpec(streamReader).partial().uncheckedConsumer();
 	}
 }

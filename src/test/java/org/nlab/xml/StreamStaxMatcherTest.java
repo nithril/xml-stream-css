@@ -67,6 +67,18 @@ public class StreamStaxMatcherTest {
 
 		}
 	}
+
+	@Test
+	public void testWikiStreamReaderWithNopCss() throws Exception {
+
+		try (Stream<StreamContext> stream = XmlStreams.streamAndClose(new GZIPInputStream(new FileInputStream("src/test/resources/enwiki-latest-pages-articles2.gz")))) {
+			stream
+					.forEach(t -> {});
+
+		}
+	}
+
+
 	@Test
 	public void testWikiPlainStreamReader() throws Exception {
 		InputStream inputStream = null;

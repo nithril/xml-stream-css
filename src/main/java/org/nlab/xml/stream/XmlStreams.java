@@ -33,7 +33,7 @@ public final class XmlStreams {
      * @throws XMLStreamException
      * @throws IOException
      */
-    public static XmlStream stream(Path path) throws XMLStreamException, IOException {
+    public static XmlStream stream(Path path) throws Exception {
         return XmlStreamSpec.with(path).stream();
     }
 
@@ -47,7 +47,7 @@ public final class XmlStreams {
      * @throws XMLStreamException
      * @throws IOException
      */
-    public static XmlStream stream(String path) throws XMLStreamException, IOException {
+    public static XmlStream stream(String path) throws Exception {
         return XmlStreamSpec.with(path).stream();
     }
 
@@ -64,12 +64,28 @@ public final class XmlStreams {
      * @return
      * @throws XMLStreamException
      */
-    public static XmlStream streamAndClose(InputStream is) throws XMLStreamException, IOException {
+    public static XmlStream streamAndClose(InputStream is) throws Exception {
         return XmlStreamSpec.with(is).closeOnFinish().stream();
     }
 
     public static CheckedSupplier<XmlStream> sstreamAndClose(InputStream is) throws IOException, XMLStreamException {
         return XmlStreamSpec.with(is).closeOnFinish().sstream();
+    }
+
+    /**
+     * Create a Stream from an InputStream.
+     * The InputStream will be closed if the stream is used in a try-with-resource statement
+     *
+     * @param is
+     * @return
+     * @throws XMLStreamException
+     */
+    public static XmlStream stream(InputStream is) throws Exception {
+        return XmlStreamSpec.with(is).stream();
+    }
+
+    public static CheckedSupplier<XmlStream> sstream(InputStream is) throws IOException, XMLStreamException {
+        return XmlStreamSpec.with(is).sstream();
     }
 
     /**
@@ -80,13 +96,15 @@ public final class XmlStreams {
      * @return
      * @throws XMLStreamException
      */
-    public static XmlStream streamAndClose(XMLStreamReader reader) throws XMLStreamException, IOException {
+    public static XmlStream streamAndClose(XMLStreamReader reader) throws Exception {
         return XmlStreamSpec.with(reader).closeOnFinish().stream();
     }
 
     public static CheckedSupplier<XmlStream> sstreamAndClose(XMLStreamReader reader) throws IOException, XMLStreamException {
         return XmlStreamSpec.with(reader).closeOnFinish().sstream();
     }
+
+
 
 
     /**
@@ -97,7 +115,7 @@ public final class XmlStreams {
      * @throws IOException
      * @throws XMLStreamException
      */
-    public static XmlConsumer newConsumer(String path) throws IOException, XMLStreamException {
+    public static XmlConsumer newConsumer(String path) throws Exception {
         return XmlStreamSpec.with(path).consumer();
     }
 
@@ -109,7 +127,7 @@ public final class XmlStreams {
      * @throws XMLStreamException
      * @throws IOException
      */
-    public static XmlConsumer newConsumer(Path path) throws XMLStreamException, IOException {
+    public static XmlConsumer newConsumer(Path path) throws Exception {
         return XmlStreamSpec.with(path).consumer();
     }
 
@@ -121,7 +139,7 @@ public final class XmlStreams {
      * @return
      * @throws XMLStreamException
      */
-    public static XmlConsumer newConsumerAndClose(XMLStreamReader xmlStreamReader) throws XMLStreamException, IOException {
+    public static XmlConsumer newConsumerAndClose(XMLStreamReader xmlStreamReader) throws Exception {
         return XmlStreamSpec.with(xmlStreamReader).closeOnFinish().consumer();
     }
 
@@ -133,7 +151,7 @@ public final class XmlStreams {
      * @return
      * @throws XMLStreamException
      */
-    public static XmlConsumer newConsumerAndClose(InputStream inputStream) throws XMLStreamException, IOException {
+    public static XmlConsumer newConsumerAndClose(InputStream inputStream) throws Exception {
         return XmlStreamSpec.with(inputStream).closeOnFinish().consumer();
     }
 

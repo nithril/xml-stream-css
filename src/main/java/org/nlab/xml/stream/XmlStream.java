@@ -43,7 +43,7 @@ public class XmlStream implements Stream<StreamContext> {
 	}
 
 	public XmlStream css(String css){
-		return filter(Predicates.css("page"));
+		return filter(Predicates.css(css));
 	}
 
 	@Override

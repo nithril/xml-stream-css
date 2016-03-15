@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+import org.jooq.lambda.fi.lang.CheckedRunnable;
+
 
 public class IoCloser {
 
@@ -72,20 +74,15 @@ public class IoCloser {
 
 
 
-    private void silentClose(ThrowableRunnable c) {
+    private void silentClose(CheckedRunnable c) {
         CompletableFuture completableFuture = new CompletableFuture();
         try {
             c.run();
             completableFuture.complete(true);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             completableFuture.completeExceptionally(e);
         }
         completableFutures.add(completableFuture);
-    }
-
-    @FunctionalInterface
-    private interface ThrowableRunnable {
-        void run() throws Exception;
     }
 
 }

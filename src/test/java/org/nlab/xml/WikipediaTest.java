@@ -1,14 +1,13 @@
 package org.nlab.xml;
 
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.zip.GZIPInputStream;
 
 import org.junit.Test;
-import org.nlab.util.Tries;
 import org.nlab.xml.stream.XmlStream;
 import org.nlab.xml.stream.XmlStreams;
 
-import static org.nlab.xml.stream.XmlStreamSpec.with;
 import static org.nlab.xml.stream.util.Transformers.getElementText;
 
 /**
@@ -36,11 +35,13 @@ public class WikipediaTest {
     @Test
     public void testWiki() throws Exception {
 
-        try (XmlStream stream = XmlStreams.streamAndClose(new GZIPInputStream(new FileInputStream("src/test/resources/enwiki-latest-pages-articles2.gz")))) {
+        try (InputStream fis = new FileInputStream("src/test/resources/enwiki-latest-pages-articles2.gz");
+             XmlStream stream = XmlStreams.streamAndClose(new GZIPInputStream(fis))) {
+
             stream.css("page")
-                    .map(cPage -> {
+                    .map(context -> {
                         Page page = new Page();
-                        with(cPage).uncheckedConsumer()
+                        context.partialConsumer()
                                 .matchCss("page > title", c -> page.title = getElementText(c.getStreamReader()))
                                 .matchCss("page > id", c -> page.id = getElementText(c.getStreamReader()))
                                 .matchCss("revision > timestamp", c -> page.lastRevision = getElementText(c.getStreamReader()))
@@ -48,8 +49,7 @@ public class WikipediaTest {
                                 .consume();
                         return page;
                     })
-                    .forEach(p->{});
-
+                    .forEach(p -> p.toString());
         }
     }
 

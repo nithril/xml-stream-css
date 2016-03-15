@@ -22,12 +22,12 @@ import static org.nlab.xml.stream.XmlStreams.newConsumer;
  */
 public class AbstractTest {
 
-	protected void test(List<Tuple2<Predicate<StreamContext>, Integer>> list, String file) throws IOException, XMLStreamException {
+	protected void test(List<Tuple2<Predicate<StreamContext>, Integer>> list, String file) throws Exception {
 		testConsumer(list,file);
 		testStream(list,file);
 	}
 
-	protected void testConsumer(List<Tuple2<Predicate<StreamContext>, Integer>> list, String file) throws IOException, XMLStreamException {
+	protected void testConsumer(List<Tuple2<Predicate<StreamContext>, Integer>> list, String file) throws Exception {
 
 		Map<Predicate<StreamContext>, AtomicInteger> counters = new HashMap<>();
 
@@ -46,7 +46,7 @@ public class AbstractTest {
 
 	}
 
-	protected void testStream(List<Tuple2<Predicate<StreamContext>, Integer>> list, String file) throws IOException, XMLStreamException {
+	protected void testStream(List<Tuple2<Predicate<StreamContext>, Integer>> list, String file) throws Exception {
 
 		for (Tuple2<Predicate<StreamContext>, Integer> tuple : list) {
 
