@@ -1,17 +1,6 @@
 package org.nlab.xml.stream;
 
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Spliterator;
-import java.util.concurrent.Callable;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
+import static org.nlab.util.IoCloser.ioCloser;
 
 import org.apache.commons.lang3.Validate;
 import org.jooq.lambda.fi.util.function.CheckedSupplier;
@@ -24,7 +13,18 @@ import org.nlab.xml.stream.reader.PartialXmlStreamReaderSpliterator;
 import org.nlab.xml.stream.reader.XmlMatcherStreamReader;
 import org.nlab.xml.stream.reader.XmlStreamReaderSpliterator;
 
-import static org.nlab.util.IoCloser.ioCloser;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Spliterator;
+import java.util.concurrent.Callable;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 
 /**
  * Created by nlabrot on 14/12/15.
@@ -140,6 +140,10 @@ public class XmlStreamSpec {
 
     public static XmlStreamSpec with(StreamContext streamContext) {
         return new XmlStreamSpec(streamContext.getStreamReader()).partial();
+    }
+
+    public static XmlStreamSpec with(Callable<InputStream> resource) {
+        return new XmlStreamSpec(resource);
     }
 
 

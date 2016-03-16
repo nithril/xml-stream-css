@@ -2,6 +2,7 @@ package org.nlab.xml.stream.context;
 
 import java.util.stream.Stream;
 
+import org.nlab.xml.stream.XmlStream;
 import org.nlab.xml.stream.XmlStreamSpec;
 import org.nlab.xml.stream.consumer.XmlConsumer;
 import org.nlab.xml.stream.reader.XmlMatcherStreamReader;
@@ -53,7 +54,7 @@ public class StreamContext {
 		return pathContext.getDocument();
 	}
 
-	public Stream<StreamContext> partialStream(){
+	public XmlStream partialStream(){
 		return new XmlStreamSpec(streamReader).partial().uncheckedStream();
 	}
 
