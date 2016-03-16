@@ -16,8 +16,8 @@ public class StaxCachedInputFactory extends AbstractStaxCachedFactory<XMLInputFa
 
     /**
      * Get an input factory according to properties
-     * @param properties
-     * @return
+     * @param properties properties
+     * @return XMLInputFactory
      */
     public static XMLInputFactory getFactory(Object... properties) {
         return SingletonHolder.INSTANCE.getOrCreateFactory(properties);

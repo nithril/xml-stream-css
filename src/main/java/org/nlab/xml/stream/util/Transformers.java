@@ -1,5 +1,7 @@
 package org.nlab.xml.stream.util;
 
+import javax.xml.stream.XMLEventReader;
+import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.Result;
@@ -15,6 +17,7 @@ import java.io.Writer;
 
 import org.codehaus.staxmate.dom.DOMConverter;
 import org.nlab.exception.UncheckedExecutionException;
+import org.nlab.xml.stream.factory.StaxCachedInputFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -44,6 +47,7 @@ public final class Transformers {
 		}
 	}
 
+
 	public static void toWriter(Node node, Writer writer) throws UncheckedExecutionException {
 		try {
 			transform(new DOMSource(node), new StreamResult(writer));
@@ -62,11 +66,21 @@ public final class Transformers {
 		}
 	}
 
-	public static String toXml(XMLStreamReader reader) {
-		StringWriter writer = new StringWriter();
-		toWriter(reader, writer);
-		return writer.toString();
+    public static String toXml(XMLStreamReader reader) {
+        StringWriter writer = new StringWriter();
+        toWriter(reader, writer);
+        return writer.toString();
+    }
+
+	public static XMLStreamReader toXmlStreamReader(Node node) throws UncheckedExecutionException {
+		try {
+			return StaxCachedInputFactory.getFactory().createXMLStreamReader(new DOMSource(node));
+		} catch (XMLStreamException e) {
+			throw new UncheckedExecutionException(e);
+		}
 	}
+
+
 
 	public static void transform(Source source, Result result) throws TransformerException {
 		TransformerFactory tf = TransformerFactory.newInstance();

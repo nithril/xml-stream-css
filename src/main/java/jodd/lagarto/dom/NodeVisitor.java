@@ -3,8 +3,7 @@
 package jodd.lagarto.dom;
 
 /**
- * Similar to {@link jodd.lagarto.TagVisitor}, this is
- * a visitor for DOM tree.
+ * This is a visitor for DOM tree.
  */
 public interface NodeVisitor {
 

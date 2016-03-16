@@ -15,6 +15,7 @@ import java.util.zip.GZIPInputStream;
 import org.junit.Assert;
 import org.junit.Test;
 import org.nlab.util.IoCloser;
+import org.nlab.xml.stream.XmlStreamSpec;
 import org.nlab.xml.stream.XmlStreams;
 import org.nlab.xml.stream.context.StreamContext;
 import org.nlab.xml.stream.factory.StaxCachedFactory;
@@ -45,6 +46,27 @@ public class StreamStaxMatcherTest {
 			Assert.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><node><content>3</content></node>", nodes.get(2));
 		}
 	}
+
+
+	@Test
+	public void testCss_Dom2() throws Exception {
+
+		try (Stream<StreamContext> stream = XmlStreams.stream("src/test/resources/dom/dom.xml")) {
+			List<String> nodes = stream
+					.filter(css("node"))
+					.map(c -> Transformers.toDom(c.getStreamReader()))
+					.map(d -> Transformers.toXmlStreamReader(d))
+                    .map(r -> XmlStreamSpec.with(r).uncheckedStream().css("content").map(c -> c.getElementText()).findFirst().get())
+					.collect(Collectors.toList());
+
+			Assert.assertEquals("1", nodes.get(0));
+			Assert.assertEquals("2", nodes.get(1));
+			Assert.assertEquals("3", nodes.get(2));
+		}
+	}
+
+
+
 	@Test
 	public void testWikiConsume() throws Exception {
 		AtomicInteger integer = new AtomicInteger();

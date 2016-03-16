@@ -101,7 +101,6 @@ public class XmlConsumer {
 	/**
 	 * Consume the Stream
 	 *
-	 * @throws XMLStreamException
 	 */
 	public void consume() {
 		for (CheckedFunction<StreamContext, Boolean> consumer : consumers) {

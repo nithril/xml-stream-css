@@ -15,8 +15,8 @@ public class StaxCachedFactory  {
 
     /**
      * Get an input factory according to properties
-     * @param properties
-     * @return
+     * @param properties properties
+     * @return XMLInputFactory
      */
     public static XMLInputFactory getInputFactory(Object... properties) {
         return StaxCachedInputFactory.getFactory(properties);
@@ -24,8 +24,8 @@ public class StaxCachedFactory  {
 
     /**
      * Get an output factory according to properties
-     * @param properties
-     * @return
+     * @param properties properties
+     * @return XMLInputFactory
      */
     public static XMLOutputFactory getOutputFactory(Object... properties) {
         return StaxCachedOutputFactory.getFactory(properties);

@@ -1,7 +1,7 @@
 XML Streaming CSS Matcher
 ==================
 
-The Streaming API for XML (StAX) is fast but at the cost of lake of context (previous node / attribute...) and matcher. 
+The Streaming API for XML (StAX) is fast but at the cost of lack of context (previous node / attribute...) and matcher. 
 Matching an xml path barely more complex than `parent/child` is cumbersome and imply to implement context saving and matching. 
 
 

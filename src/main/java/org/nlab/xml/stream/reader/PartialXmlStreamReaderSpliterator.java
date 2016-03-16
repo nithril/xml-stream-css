@@ -9,6 +9,9 @@ import org.apache.commons.lang3.Validate;
 import org.nlab.exception.UncheckedExecutionException;
 import org.nlab.xml.stream.context.StreamContext;
 
+import static javax.xml.stream.XMLStreamConstants.START_DOCUMENT;
+import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
+
 /**
  * Created by nlabrot on 08/12/15.
  */
@@ -18,7 +21,8 @@ public class PartialXmlStreamReaderSpliterator implements Spliterator<StreamCont
 	private final int depth;
 
 	public PartialXmlStreamReaderSpliterator(XmlMatcherStreamReader xmlMatcherStreamReader) {
-		Validate.isTrue(XMLStreamConstants.START_ELEMENT == xmlMatcherStreamReader.getEventType());
+		Validate.isTrue(START_ELEMENT == xmlMatcherStreamReader.getEventType() ||
+				START_DOCUMENT == xmlMatcherStreamReader.getEventType());
 		this.xmlMatcherStreamReader = xmlMatcherStreamReader;
 		this.depth = xmlMatcherStreamReader.getStreamContext().getPathContext().getAncestors().size();
 	}

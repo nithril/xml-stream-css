@@ -28,8 +28,8 @@ public final class XmlStreams {
      * Create a Stream from a path
      * As the stream parses an InputStream, the stream must be embed in a try-with-resource statement
      *
-     * @param path
-     * @return
+     * @param path path
+     * @return XmlStream
      * @throws XMLStreamException
      * @throws IOException
      */
@@ -42,8 +42,8 @@ public final class XmlStreams {
      * Create a Stream from a path
      * As the stream parses an InputStream, the stream must be used in a try-with-resource statement
      *
-     * @param path
-     * @return
+     * @param path path
+     * @return XmlStream
      * @throws XMLStreamException
      * @throws IOException
      */
@@ -60,8 +60,8 @@ public final class XmlStreams {
      * Create a Stream from an InputStream.
      * The InputStream will be closed if the stream is used in a try-with-resource statement
      *
-     * @param is
-     * @return
+     * @param is InputStream
+     * @return XmlStream
      * @throws XMLStreamException
      */
     public static XmlStream streamAndClose(InputStream is) throws Exception {
@@ -76,8 +76,8 @@ public final class XmlStreams {
      * Create a Stream from an InputStream.
      * The InputStream will be closed if the stream is used in a try-with-resource statement
      *
-     * @param is
-     * @return
+     * @param is InputStream
+     * @return XmlStream
      * @throws XMLStreamException
      */
     public static XmlStream stream(InputStream is) throws Exception {
@@ -92,8 +92,8 @@ public final class XmlStreams {
      * Create a Stream from an XMLStreamReader.
      * The XMLStreamReader will be closed if the stream is used in a try-with-resource statement
      *
-     * @param reader
-     * @return
+     * @param reader XMLStreamReader
+     * @return XmlStream
      * @throws XMLStreamException
      */
     public static XmlStream streamAndClose(XMLStreamReader reader) throws Exception {
@@ -104,14 +104,29 @@ public final class XmlStreams {
         return XmlStreamSpec.with(reader).closeOnFinish().sstream();
     }
 
+    /**
+     * Create a Stream from an XMLStreamReader.
+     *
+     * @param reader XMLStreamReader
+     * @return XmlStream
+     * @throws XMLStreamException
+     */
+    public static XmlStream stream(XMLStreamReader reader) throws Exception {
+        return XmlStreamSpec.with(reader).stream();
+    }
+
+    public static CheckedSupplier<XmlStream> sstream(XMLStreamReader reader) throws IOException, XMLStreamException {
+        return XmlStreamSpec.with(reader).sstream();
+    }
+
 
 
 
     /**
      * Create an XmlConsumer from a path
      *
-     * @param path
-     * @return
+     * @param path path
+     * @return XmlStream
      * @throws IOException
      * @throws XMLStreamException
      */
@@ -122,8 +137,8 @@ public final class XmlStreams {
     /**
      * Create an XmlConsumer from a path
      *
-     * @param path
-     * @return
+     * @param path path
+     * @return XmlStream
      * @throws XMLStreamException
      * @throws IOException
      */
@@ -136,7 +151,7 @@ public final class XmlStreams {
      * The XMLStreamReader is closed once the consumer finished succesfully or with error
      *
      * @param xmlStreamReader
-     * @return
+     * @return XmlStream
      * @throws XMLStreamException
      */
     public static XmlConsumer newConsumerAndClose(XMLStreamReader xmlStreamReader) throws Exception {
@@ -148,7 +163,7 @@ public final class XmlStreams {
      * The InputStream is closed once the consumer finished succesfully or with error
      *
      * @param inputStream
-     * @return
+     * @return XmlStream
      * @throws XMLStreamException
      */
     public static XmlConsumer newConsumerAndClose(InputStream inputStream) throws Exception {
