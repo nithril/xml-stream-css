@@ -7,7 +7,7 @@
 
     <groupId>com.github.nithril</groupId>
     <artifactId>xml-stream-css</artifactId>
-    <version>1.0.0-RC1</version>
+    <version>1.0.0-RC2</version>
 
     <name>Xml Stream Css</name>
     <description>Stream Xml using StAX and Css matcher</description>
@@ -51,7 +51,7 @@
         <dependency>
             <groupId>com.fasterxml.woodstox</groupId>
             <artifactId>woodstox-core</artifactId>
-            <version>5.0.1</version>
+            <version>5.0.2</version>
             <optional>true</optional>
         </dependency>
 

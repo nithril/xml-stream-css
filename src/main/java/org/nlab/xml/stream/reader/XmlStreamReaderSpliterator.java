@@ -13,44 +13,51 @@ import org.nlab.xml.stream.context.StreamContext;
  */
 public class XmlStreamReaderSpliterator implements Spliterator<StreamContext> {
 
-	private final XmlMatcherStreamReader xmlMatcherStreamReader;
+    private final XmlMatcherStreamReader xmlMatcherStreamReader;
 
-	public XmlStreamReaderSpliterator(XmlMatcherStreamReader xmlMatcherStreamReader) {
-		this.xmlMatcherStreamReader = xmlMatcherStreamReader;
-	}
+    private boolean eoi = false;
 
-	@Override
-	public boolean tryAdvance(Consumer<? super StreamContext> action) {
-		try {
-			int event = xmlMatcherStreamReader.getEventType();
+    public XmlStreamReaderSpliterator(XmlMatcherStreamReader xmlMatcherStreamReader) {
+        this.xmlMatcherStreamReader = xmlMatcherStreamReader;
+    }
 
-			StreamContext currentContext = xmlMatcherStreamReader.getStreamContext();
+    @Override
+    public boolean tryAdvance(Consumer<? super StreamContext> action) {
+        try {
+            if (eoi) {
+                return false;
+            }
 
-			action.accept(currentContext);
+            int event = xmlMatcherStreamReader.getEventType();
 
-			if (event == XMLStreamConstants.END_DOCUMENT) {
-				return false;
-			} else {
-				xmlMatcherStreamReader.next();
-				return true;
-			}
-		} catch (XMLStreamException e) {
-			throw new UncheckedExecutionException(e);
-		}
-	}
+            StreamContext currentContext = xmlMatcherStreamReader.getStreamContext();
 
-	@Override
-	public Spliterator trySplit() {
-		return null;
-	}
+            action.accept(currentContext);
 
-	@Override
-	public long estimateSize() {
-		return 0;
-	}
+            if (event == XMLStreamConstants.END_DOCUMENT) {
+                eoi = true;
+                return false;
+            } else {
+                xmlMatcherStreamReader.next();
+                return true;
+            }
+        } catch (XMLStreamException e) {
+            throw new UncheckedExecutionException(e);
+        }
+    }
 
-	@Override
-	public int characteristics() {
-		return Spliterator.NONNULL | Spliterator.DISTINCT | Spliterator.IMMUTABLE;
-	}
+    @Override
+    public Spliterator trySplit() {
+        return null;
+    }
+
+    @Override
+    public long estimateSize() {
+        return 0;
+    }
+
+    @Override
+    public int characteristics() {
+        return Spliterator.NONNULL | Spliterator.DISTINCT | Spliterator.IMMUTABLE;
+    }
 }
