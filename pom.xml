@@ -7,7 +7,7 @@
 
     <groupId>com.github.nithril</groupId>
     <artifactId>xml-stream-css</artifactId>
-    <version>1.0.0-RC2</version>
+    <version>1.0.0-RC3</version>
 
     <name>Xml Stream Css</name>
     <description>Stream Xml using StAX and Css matcher</description>

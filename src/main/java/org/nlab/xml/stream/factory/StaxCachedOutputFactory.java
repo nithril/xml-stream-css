@@ -18,7 +18,7 @@ public class StaxCachedOutputFactory extends AbstractStaxCachedFactory<XMLOutput
     /**
      * Get an output factory according to properties
      * @param properties
-     * @return
+     * @return the factory
      */
     public static XMLOutputFactory getFactory(Object... properties) {
         return SingletonHolder.INSTANCE.getOrCreateFactory(properties);

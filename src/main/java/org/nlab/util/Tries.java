@@ -8,7 +8,6 @@ import org.jooq.lambda.fi.util.function.CheckedConsumer;
 import org.jooq.lambda.fi.util.function.CheckedFunction;
 import org.jooq.lambda.fi.util.function.CheckedSupplier;
 
-import static javafx.scene.input.KeyCode.T;
 
 /**
  * Created by nlabrot on 11/03/16.
