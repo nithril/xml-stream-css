@@ -1,13 +1,32 @@
-XML Streaming CSS Matcher
-==================
+# XML Streaming CSS Matcher
+
 
 The Streaming API for XML (StAX) is fast but at the cost of lack of context (previous node / attribute...) and matcher. 
 Matching an xml path barely more complex than `parent/child` is cumbersome and imply to implement context saving and matching. 
 
 
+# Requirements
 
-Element matcher
-------------------
+Java 1.7
+
+# Maven dependency
+
+Search for the latest version on [Maven central](http://search.maven.org/#search|ga|1|g%3A%22com.github.nithril%22%20a%3A%22xml-stream-css%22):
+
+eg.:
+
+```xml
+<dependency>
+    <groupId>com.github.nithril</groupId>
+    <artifactId>xml-stream-css</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
+
+# How to use it
+
+## Element matcher
+
 
 The following code:
 
@@ -34,8 +53,8 @@ XmlStreams.newConsumer("foo.xml")
 ```
 
 
-CSS matcher
-------------------
+## CSS matcher
+
 
 Things can get tough when the path is not limited to one element and include attributes `/foo/bar[attr='value']`
 
@@ -68,8 +87,8 @@ XmlStreams.newConsumer("foo.xml")
 
 
 
-Java 8 Stream
-----------------------------------------
+## Java 8 Stream
+
 
 XML can be streamed using the Java 8 stream:
 
@@ -83,8 +102,8 @@ try (Stream<StaxContext> stream = XmlStreams.stream("foo.xml")) {
 ```
 
 
-Predicates
-------------------
+## Predicates
+
 
 All matchers are Java 8 [Predicate](https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html) that can be combined.
 
@@ -100,8 +119,8 @@ See the [Predicates helper](org/nlab/xml/stream/predicate/Predicates.java) for t
 
 
 
-Nested Consumer and Streamer
-------------------
+## Nested Consumer and Streamer
+
 
 Consumer and Streamer can be nested.
 
@@ -127,8 +146,8 @@ a nester consumer extract the title, id, timestamp and contributor name:
     }
 ```
 
-Supported selectors 
-=========================
+## Supported selectors
+
 
 CSS implementation comes from the [Jodd CSSelly project](http://jodd.org/doc/csselly/). 
 Only forward selectors are supported, for obvious reason backward selectors cannot be supported.
